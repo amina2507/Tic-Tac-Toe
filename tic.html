@@ -1,0 +1,123 @@
+<h1>Tic-Tac-Toe</h1>
+<div class="container"></div>
+<button type="reset">Reset</button>
+<h3 id="message"></h3>
+<style>
+body {
+	display: grid;
+	place-items: center; /* Center both horizontally and vertically */
+  padding: 0px;
+	margin: 0px;
+	background-image: url('https://www.svgbackgrounds.com/wp-content/uploads/2021/05/pattern-randomized-square-grid-bg.png');
+}
+h1 {
+	text-align: center;
+	color: rgb(0, 0, 0) !important;
+	font-size:50px
+}
+.container {
+   display:grid;
+   grid-template-columns: repeat(3,1fr); /* 4 columns of equal width */
+   grid-template-rows: repeat(3);    /* 4 rows of equal height */
+   gap: 8px;
+   width: 250px;  /* Fixed width */
+   height: 250px; /* Fixed height */
+}
+.box {
+	width: 100%;
+	height: 100%;
+	border: 2px solid black;
+	background-color: white;
+}
+button {
+	margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+		
+}
+
+.message {
+  margin: 40px;
+    font-size: 64px;
+    color: #333;
+}
+</style>
+<script>
+const contain = document.querySelector('.container');
+const resetButton = document.querySelector('button');
+const messageDiv = document.getElementById('message');
+const circleImage = "https://i.pngimg.me/thumb/f/720/m2H7d3i8A0b1b1d3.jpg";
+const xImage = 'https://banner2.cleanpng.com/20180423/rye/kisspng-tic-tac-toe-computer-icons-clip-art-5add84df649c12.1755804215244669114121.jpg';
+let current = 'X';
+let gameState = ["", "", "", "", "", "", "", "", ""];
+
+const winningConditions = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
+];
+
+function createbox() {
+  contain.innerHTML = ''; // Clear existing boxes
+  for (let i = 0; i < 9; i++) {
+    const div = document.createElement('div');
+    div.classList.add('box');
+    div.addEventListener('click', () => handleBoxClick(div, i));
+    contain.appendChild(div);
+  }
+}
+
+function handleBoxClick(div, index) {
+  if (gameState[index] !== "" || checkWin()) {
+    return;
+  }
+  
+  gameState[index] = current;
+  div.style.backgroundImage = current === 'X' ? `url(${xImage})` : `url(${circleImage})`;
+  div.style.backgroundSize = 'cover';
+
+  if (checkWin()) {
+    messageDiv.textContent = `${current} wins!`;
+    resetGame();
+  } else if (!gameState.includes("")) {
+    console.log("It's a draw!");
+    resetGame();
+  } else {
+    current = current === 'X' ? 'O' : 'X'; // Switch players
+  }
+}
+
+function checkWin() {
+  for (let condition of winningConditions) {
+    const [a, b, c] = condition;
+    if (gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function resetGame() {
+  gameState = ["", "", "", "", "", "", "", "", ""];
+  current = 'X';
+  createbox(); // Recreate the boxes to ensure they are reset properly
+}
+
+// Create the initial grid
+createbox();
+
+// Add event listener to the reset button
+resetButton.addEventListener('click', resetGame);
+
+</script>
+
+
